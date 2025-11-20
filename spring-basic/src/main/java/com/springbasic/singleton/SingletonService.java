@@ -1,6 +1,7 @@
 package com.springbasic.singleton;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,10 +19,15 @@ import org.springframework.stereotype.Service;
  * - Spring manages the lifecycle
  * - Easier to test (can mock/replace)
  *
+ * Note: We use @Getter/@Setter instead of @Data to avoid Lombok generating
+ * a custom hashCode() that changes based on field values. We want to use
+ * the default Object.hashCode() which is based on object identity.
+ *
  * @author Spring Basic Tutorial
  */
 @Service
-@Data
+@Getter
+@Setter
 public class SingletonService {
 
     private int requestCount = 0;

@@ -9,10 +9,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * This application demonstrates fundamental Spring Boot concepts:
  * 1. Singleton Pattern
  * 2. Spring Beans
- * 3. Dependency Injection
- * 4. Annotations
- * 5. Configuration (application.properties)
- * 6. Environment Variables
+ * 3. Bean Lifecycle
+ * 4. Dependency Injection
+ * 5. Annotations
+ * 6. Configuration (application.properties)
+ * 7. Environment Variables
  *
  * @author Spring Boot Learning Team
  * @version 1.0.0
@@ -33,6 +34,7 @@ public class SpringBasicApplication {
 			"║  Available Endpoints:                                 ║\n" +
 			"║  • /api/singleton/*    - Singleton Pattern            ║\n" +
 			"║  • /api/beans/*        - Spring Beans                 ║\n" +
+			"║  • /api/lifecycle/*    - Bean Lifecycle               ║\n" +
 			"║  • /api/di/*           - Dependency Injection         ║\n" +
 			"║  • /api/annotations/*  - Annotations                  ║\n" +
 			"║  • /api/config/*       - Configuration                ║\n" +

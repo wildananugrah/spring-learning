@@ -1,0 +1,362 @@
+### Spring Boot Basics - API Testing File
+### Application: {{baseUrl}}
+### Use this file with REST Client extension in VS Code or IntelliJ HTTP Client
+
+@baseUrl=http://localhost:9000
+
+#########################################
+# 1. SINGLETON PATTERN
+#########################################
+
+### Get Traditional Singleton Demo
+GET {{baseUrl}}/api/singleton/traditional
+
+### Get Spring Singleton Demo
+GET {{baseUrl}}/api/singleton/spring
+
+### Compare Singleton Types
+GET {{baseUrl}}/api/singleton/compare
+
+### Process Request with Singleton
+POST {{baseUrl}}/api/singleton/process
+Content-Type: application/json
+
+{
+  "message": "Test message for singleton processing"
+}
+
+### Reset Singleton (Demo Only)
+POST {{baseUrl}}/api/singleton/reset
+
+
+#########################################
+# 2. SPRING BEANS
+#########################################
+
+### Component Bean Demo
+GET {{baseUrl}}/api/beans/component
+
+### Configuration Bean Demo
+GET {{baseUrl}}/api/beans/configuration
+
+### Singleton Scope Demo
+GET {{baseUrl}}/api/beans/scopes/singleton
+
+### Prototype Scope Demo
+GET {{baseUrl}}/api/beans/scopes/prototype
+
+### Request Scope Demo
+GET {{baseUrl}}/api/beans/scopes/request
+
+### Session Scope Demo
+GET {{baseUrl}}/api/beans/scopes/session
+
+### Update Session Data
+POST {{baseUrl}}/api/beans/scopes/session/data
+Content-Type: application/json
+
+{
+  "data": "My custom session data"
+}
+
+### Send Email via EmailService Bean
+POST {{baseUrl}}/api/beans/email
+Content-Type: application/json
+
+{
+  "to": "user@example.com",
+  "subject": "Test Email",
+  "body": "This is a test email from Spring Beans demo"
+}
+
+
+#########################################
+# 3. BEAN LIFECYCLE
+#########################################
+
+### Get Lifecycle Events
+GET {{baseUrl}}/api/lifecycle/events
+
+### Get Lifecycle Info
+GET {{baseUrl}}/api/lifecycle/info
+
+### Execute Business Logic on Lifecycle Bean
+POST {{baseUrl}}/api/lifecycle/work
+Content-Type: application/json
+
+{
+  "task": "Process user data"
+}
+
+### Custom Lifecycle Bean Demo
+GET {{baseUrl}}/api/lifecycle/custom
+
+### Process Data with Custom Lifecycle Bean
+POST {{baseUrl}}/api/lifecycle/custom/process
+Content-Type: application/json
+
+{
+  "data": "Sample data to process"
+}
+
+### Database Connection Pool Demo
+GET {{baseUrl}}/api/lifecycle/database
+
+### Get Database Connection
+POST {{baseUrl}}/api/lifecycle/database/connection
+
+### Release Database Connection
+POST {{baseUrl}}/api/lifecycle/database/release
+
+### Get Lifecycle Explanation
+GET {{baseUrl}}/api/lifecycle/explanation
+
+### Compare Lifecycle Approaches
+GET {{baseUrl}}/api/lifecycle/compare
+
+
+#########################################
+# 4. DEPENDENCY INJECTION
+#########################################
+
+### Constructor Injection Demo
+POST {{baseUrl}}/api/di/constructor/notify
+Content-Type: application/json
+
+{
+  "recipient": "user@example.com",
+  "message": "Test notification via constructor injection"
+}
+
+### Multi-Channel Notification
+POST {{baseUrl}}/api/di/constructor/multi-channel
+Content-Type: application/json
+
+{
+  "recipient": "+1234567890",
+  "message": "Multi-channel notification test"
+}
+
+### Setter Injection Demo
+POST {{baseUrl}}/api/di/setter/order
+Content-Type: application/json
+
+{
+  "customerEmail": "customer@example.com",
+  "customerPhone": "+1234567890",
+  "productName": "Spring Boot Course",
+  "quantity": 2
+}
+
+### Qualifier Demo - SMS
+POST {{baseUrl}}/api/di/qualifier/sms
+Content-Type: application/json
+
+{
+  "recipient": "+1234567890",
+  "message": "Test SMS via @Qualifier"
+}
+
+### Primary Demo - Email
+POST {{baseUrl}}/api/di/primary/email
+Content-Type: application/json
+
+{
+  "recipient": "user@example.com",
+  "message": "Test email via @Primary"
+}
+
+### Compare DI Types
+GET {{baseUrl}}/api/di/compare
+
+### Bean Method Parameter Injection
+POST {{baseUrl}}/api/di/report
+Content-Type: application/json
+
+{
+  "recipient": "manager@example.com",
+  "reportType": "Monthly Sales Report"
+}
+
+### Get Notification History
+GET {{baseUrl}}/api/di/history
+
+### Get All Orders
+GET {{baseUrl}}/api/di/orders
+
+### Field Injection Demo (NOT RECOMMENDED)
+GET {{baseUrl}}/api/di/field/welcome
+
+### Field Injection Info
+GET {{baseUrl}}/api/di/field/info
+
+
+#########################################
+# 5. ANNOTATIONS
+#########################################
+
+### Component Annotation Demo
+GET {{baseUrl}}/api/annotations/component
+
+### Service Annotation Demo
+POST {{baseUrl}}/api/annotations/service
+Content-Type: application/json
+
+{
+  "amount": 1000.00,
+  "description": "Product purchase",
+  "taxRate": 0.15
+}
+
+### Repository Annotation Demo
+GET {{baseUrl}}/api/annotations/repository
+
+### Create Product in Repository
+POST {{baseUrl}}/api/annotations/repository/product
+Content-Type: application/json
+
+{
+  "name": "Spring Boot Tutorial",
+  "price": 49.99
+}
+
+### Configuration Annotation Demo
+GET {{baseUrl}}/api/annotations/configuration
+
+### Test Encryption
+POST {{baseUrl}}/api/annotations/configuration/encrypt
+Content-Type: application/json
+
+{
+  "data": "Secret message to encrypt"
+}
+
+### Value Annotation Demo
+GET {{baseUrl}}/api/annotations/value
+
+### Autowired Annotation Demo
+GET {{baseUrl}}/api/annotations/autowired
+
+### Qualifier Annotation Demo - Payment
+POST {{baseUrl}}/api/annotations/qualifier/payment
+Content-Type: application/json
+
+{
+  "paymentMethod": "credit_card",
+  "amount": 150.00
+}
+
+### Demonstrate All Payment Processors
+GET {{baseUrl}}/api/annotations/qualifier/payment/all
+
+### Compare Stereotype Annotations
+GET {{baseUrl}}/api/annotations/stereotypes/compare
+
+
+#########################################
+# 6. CONFIGURATION
+#########################################
+
+### Get All Properties
+GET {{baseUrl}}/api/config/properties
+
+### Get Database Configuration
+GET {{baseUrl}}/api/config/database
+
+### Get Feature Flags
+GET {{baseUrl}}/api/config/features
+
+### Get Environment Properties
+GET {{baseUrl}}/api/config/environment
+
+### Test Database Connection
+POST {{baseUrl}}/api/config/database/connect
+
+### Disconnect from Database
+POST {{baseUrl}}/api/config/database/disconnect
+
+### Update Configuration (Demo)
+POST {{baseUrl}}/api/config/update
+Content-Type: application/json
+
+{
+  "key": "app.name",
+  "value": "Updated App Name"
+}
+
+### Compare Configuration Approaches
+GET {{baseUrl}}/api/config/approaches
+
+
+#########################################
+# 7. ENVIRONMENT VARIABLES
+#########################################
+
+### Get System Environment
+GET {{baseUrl}}/api/env/system
+
+### Get Application Environment
+GET {{baseUrl}}/api/env/application
+
+### Get Database Environment
+GET {{baseUrl}}/api/env/database
+
+### Get API Environment
+GET {{baseUrl}}/api/env/api
+
+### Get Redis Environment
+GET {{baseUrl}}/api/env/redis
+
+### Get AWS Environment
+GET {{baseUrl}}/api/env/aws
+
+### Get All Environment Variables
+GET {{baseUrl}}/api/env/all
+
+### Get Specific Environment Variable
+GET {{baseUrl}}/api/env/variable/JAVA_HOME
+
+### Get Active Profiles
+GET {{baseUrl}}/api/env/profiles
+
+### Demonstrate Conditional Logic
+GET {{baseUrl}}/api/env/conditional
+
+### Get Best Practices
+GET {{baseUrl}}/api/env/best-practices
+
+### Set Environment Variable (Educational Demo)
+POST {{baseUrl}}/api/env/set
+Content-Type: application/json
+
+{
+  "name": "MY_CUSTOM_VAR",
+  "value": "my_custom_value"
+}
+
+
+#########################################
+# QUICK TEST SUITE
+# Uncomment to run a quick test of all major endpoints
+#########################################
+
+### Quick Test 1: Singleton
+# GET {{baseUrl}}/api/singleton/traditional
+
+### Quick Test 2: Beans
+# GET {{baseUrl}}/api/beans/component
+
+### Quick Test 3: Lifecycle
+# GET {{baseUrl}}/api/lifecycle/info
+
+### Quick Test 4: DI
+# GET {{baseUrl}}/api/di/compare
+
+### Quick Test 5: Annotations
+# GET {{baseUrl}}/api/annotations/component
+
+### Quick Test 6: Configuration
+# GET {{baseUrl}}/api/config/properties
+
+### Quick Test 7: Environment
+# GET {{baseUrl}}/api/env/system

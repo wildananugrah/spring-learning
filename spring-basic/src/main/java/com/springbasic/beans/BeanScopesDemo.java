@@ -1,6 +1,7 @@
 package com.springbasic.beans;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -80,8 +81,14 @@ public class BeanScopesDemo {
 
     /**
      * Singleton bean class
+     *
+     * Note: We use @Getter/@Setter instead of @Data to avoid Lombok generating
+     * a custom hashCode() that changes based on field values (like accessCount).
+     * We want to use the default Object.hashCode() which is based on object identity,
+     * so the hashCode remains constant for the same singleton instance.
      */
-    @Data
+    @Getter
+    @Setter
     public static class SingletonBean {
         private final long creationTime = System.currentTimeMillis();
         private int accessCount = 0;
@@ -95,8 +102,13 @@ public class BeanScopesDemo {
 
     /**
      * Prototype bean class
+     *
+     * Note: Using @Getter/@Setter instead of @Data to preserve object identity hashCode.
+     * For prototype beans, each instance will have a DIFFERENT hashCode (different objects),
+     * but the hashCode won't change when accessCount changes.
      */
-    @Data
+    @Getter
+    @Setter
     public static class PrototypeBean {
         private final long creationTime = System.currentTimeMillis();
         private int accessCount = 0;
@@ -110,8 +122,13 @@ public class BeanScopesDemo {
 
     /**
      * Request-scoped bean class
+     *
+     * Note: Using @Getter/@Setter instead of @Data to preserve object identity hashCode.
+     * Within a single HTTP request, the same instance is used, so hashCode should stay constant.
+     * Different requests will get different instances (different hashCodes).
      */
-    @Data
+    @Getter
+    @Setter
     public static class RequestBean {
         private final long creationTime = System.currentTimeMillis();
         private int accessCount = 0;
@@ -125,8 +142,13 @@ public class BeanScopesDemo {
 
     /**
      * Session-scoped bean class
+     *
+     * Note: Using @Getter/@Setter instead of @Data to preserve object identity hashCode.
+     * Within the same HTTP session, the same instance is used, so hashCode should stay constant.
+     * Different sessions will get different instances (different hashCodes).
      */
-    @Data
+    @Getter
+    @Setter
     public static class SessionBean {
         private final long creationTime = System.currentTimeMillis();
         private int accessCount = 0;
