@@ -1,0 +1,329 @@
+### N+1 Query Problem Demo API Tests
+### Use this file with REST Client extension in VS Code or IntelliJ HTTP Client
+
+### Variables
+@baseUrl = http://localhost:8001
+@apiPath = /api/demo
+
+
+### ============================================
+### 1. Demonstrate N+1 Query Problem
+### This will execute 1 + N queries (6 queries total with 5 authors)
+### Check your console to see multiple SELECT queries!
+### ============================================
+GET {{baseUrl}}{{apiPath}}/n-plus-one-problem
+Accept: text/plain
+
+### Expected Console Output:
+### - 1 query to fetch all authors
+### - 5 separate queries to fetch books for each author
+### - Total: 6 queries ❌
+
+
+### ============================================
+### 2. Demonstrate FETCH JOIN Solution
+### This will execute only 1 query using LEFT JOIN FETCH
+### Check your console - you should see only ONE query!
+### ============================================
+GET {{baseUrl}}{{apiPath}}/fetch-join-solution
+Accept: text/plain
+
+### Expected Console Output:
+### - 1 query that joins authors and books
+### - Total: 1 query ✅
+
+
+### ============================================
+### 3. Demonstrate EntityGraph Solution
+### This will execute only 1 query using @EntityGraph
+### Check your console - you should see only ONE query!
+### ============================================
+GET {{baseUrl}}{{apiPath}}/entity-graph-solution
+Accept: text/plain
+
+### Expected Console Output:
+### - 1 query that joins authors and books
+### - Total: 1 query ✅
+
+
+### ============================================
+### Pro Tips:
+### ============================================
+###
+### 1. Run these requests one at a time
+### 2. Watch the console output in your terminal
+### 3. Compare the number of SQL queries executed
+### 4. Look for patterns like:
+###    - "select ... from authors" (initial query)
+###    - "select ... from books where author_id=?" (N+1 problem)
+###
+### 5. With FETCH JOIN you'll see:
+###    - "select ... from authors left join books" (single query)
+###
+### ============================================
+
+
+### ============================================
+### Optional: Test with cURL commands
+### ============================================
+
+# Test N+1 Problem
+# curl -X GET http://localhost:8080/api/demo/n-plus-one-problem
+
+# Test FETCH JOIN Solution
+# curl -X GET http://localhost:8080/api/demo/fetch-join-solution
+
+# Test EntityGraph Solution
+# curl -X GET http://localhost:8080/api/demo/entity-graph-solution
+
+
+### ============================================
+### What to Look For in Console
+### ============================================
+
+### N+1 Problem Console Output Example:
+###
+### Hibernate: select a1_0.id,a1_0.email,a1_0.name from authors a1_0
+### Hibernate: select b1_0.author_id,b1_0.id,b1_0.isbn,b1_0.title from books b1_0 where b1_0.author_id=?
+### Hibernate: select b1_0.author_id,b1_0.id,b1_0.isbn,b1_0.title from books b1_0 where b1_0.author_id=?
+### Hibernate: select b1_0.author_id,b1_0.id,b1_0.isbn,b1_0.title from books b1_0 where b1_0.author_id=?
+### Hibernate: select b1_0.author_id,b1_0.id,b1_0.isbn,b1_0.title from books b1_0 where b1_0.author_id=?
+### Hibernate: select b1_0.author_id,b1_0.id,b1_0.isbn,b1_0.title from books b1_0 where b1_0.author_id=?
+###
+### ❌ 6 queries executed!
+
+
+### FETCH JOIN Solution Console Output Example:
+###
+### Hibernate:
+###     select
+###         distinct a1_0.id,
+###         b1_0.author_id,
+###         b1_0.id,
+###         b1_0.isbn,
+###         b1_0.title,
+###         a1_0.email,
+###         a1_0.name
+###     from
+###         authors a1_0
+###     left join
+###         books b1_0
+###             on a1_0.id=b1_0.author_id
+###
+### ✅ Only 1 query executed!
+
+
+### ============================================
+### ============================================
+### PERFORMANCE COMPARISON TESTS
+### ============================================
+### ============================================
+
+
+### ============================================
+### 🏆 MAIN TEST: Complete Performance Comparison
+### This runs all methods multiple times and shows detailed statistics
+### Check the console for detailed benchmark results!
+### ============================================
+GET {{baseUrl}}/api/performance/compare?iterations=100
+Accept: application/json
+
+### This will show:
+### - Average execution time for each method
+### - Number of queries executed
+### - Percentage improvement of optimized solutions
+### - Winner determination
+###
+### Recommended iterations:
+### - iterations=10  (quick test)
+### - iterations=50  (more accurate)
+### - iterations=100 (production-like benchmark)
+
+
+### ============================================
+### Individual Performance Tests
+### ============================================
+
+### Test N+1 Problem Performance
+GET {{baseUrl}}/api/performance/n-plus-one
+Accept: application/json
+
+###
+
+### Test FETCH JOIN Performance
+GET {{baseUrl}}/api/performance/fetch-join
+Accept: application/json
+
+###
+
+### Test EntityGraph Performance
+GET {{baseUrl}}/api/performance/entity-graph
+Accept: application/json
+
+
+### ============================================
+### Performance Comparison with Different Iterations
+### ============================================
+
+### Quick Test (10 iterations)
+GET {{baseUrl}}/api/performance/compare?iterations=10
+Accept: application/json
+
+###
+
+### Medium Test (50 iterations)
+GET {{baseUrl}}/api/performance/compare?iterations=50
+Accept: application/json
+
+###
+
+### Comprehensive Test (100 iterations)
+GET {{baseUrl}}/api/performance/compare?iterations=100
+Accept: application/json
+
+
+### ============================================
+### Expected Performance Results
+### ============================================
+
+### With 5 authors:
+###
+### N+1 Problem:
+### - Queries: 6 (1 for authors + 5 for books)
+### - Time: ~50-100ms (depends on DB latency)
+###
+### FETCH JOIN:
+### - Queries: 1 (single join query)
+### - Time: ~10-30ms
+### - Improvement: ~83% fewer queries, 50-70% faster
+###
+### EntityGraph:
+### - Queries: 1 (single join query)
+### - Time: ~10-30ms
+### - Improvement: ~83% fewer queries, 50-70% faster
+###
+### 🏆 WINNER: FETCH JOIN or EntityGraph (similar performance)
+###
+### Note: With more data (e.g., 100 authors):
+### - N+1 would execute 101 queries
+### - FETCH JOIN would still execute 1 query
+### - Performance difference would be MASSIVE!
+### ============================================
+
+
+### ============================================
+### ============================================
+### DATABASE RESET OPERATIONS
+### ============================================
+### ============================================
+
+
+### ============================================
+### 🔄 Reset Database - Truncate and Reset Sequences
+### Fastest way to clean database and reset auto-increment IDs
+### ============================================
+POST {{baseUrl}}/api/database/truncate
+Content-Type: application/json
+
+### This will:
+### - Remove all data from tables (TRUNCATE)
+### - Reset auto-increment sequences to 1
+### - Fastest method
+
+
+### ============================================
+### 🗑️ Reset All - Delete Data and Reset Sequences
+### Delete all data and reset sequences
+### ============================================
+POST {{baseUrl}}/api/database/reset-all
+Content-Type: application/json
+
+### This will:
+### - DELETE all records from tables
+### - Reset auto-increment sequences to 1
+### - Slower than TRUNCATE but safer
+
+
+### ============================================
+### 🔢 Reset Sequences Only (Keep Data)
+### Reset auto-increment sequences without deleting data
+### WARNING: May cause ID conflicts if data exists
+### ============================================
+POST {{baseUrl}}/api/database/reset-sequences
+Content-Type: application/json
+
+### This will:
+### - Keep all existing data
+### - Reset sequences to 1
+### - ⚠️ WARNING: May cause primary key conflicts!
+
+
+### ============================================
+### 📊 Get Current Sequence Values
+### Check current auto-increment values
+### ============================================
+GET {{baseUrl}}/api/database/sequence-info
+Accept: application/json
+
+### This will show current sequence values in console
+
+
+### ============================================
+### 🎯 Reset Specific Sequence to Custom Value
+### Reset a specific sequence to a custom starting value
+### ============================================
+POST {{baseUrl}}/api/database/reset-sequence/authors/id/1000
+Content-Type: application/json
+
+### URL format: /reset-sequence/{tableName}/{columnName}/{startValue}
+### Example: Reset authors.id sequence to start from 1000
+
+###
+
+POST {{baseUrl}}/api/database/reset-sequence/books/id/5000
+Content-Type: application/json
+
+### Example: Reset books.id sequence to start from 5000
+
+
+### ============================================
+### Common Use Cases
+### ============================================
+
+### Use Case 1: Clean slate for testing
+### → Use: POST /api/database/truncate
+###
+
+### Use Case 2: Reset IDs after deleting test data
+### → Use: POST /api/database/reset-all
+###
+
+### Use Case 3: Start IDs from specific number (e.g., 1000)
+### → Use: POST /api/database/reset-sequence/authors/id/1000
+###
+
+### Use Case 4: Check if sequences are out of sync
+### → Use: GET /api/database/sequence-info
+###
+
+
+### ============================================
+### Direct SQL Commands (Alternative)
+### ============================================
+
+### You can also run these SQL commands directly in PostgreSQL:
+###
+### -- Reset sequence to 1
+### ALTER SEQUENCE authors_id_seq RESTART WITH 1;
+### ALTER SEQUENCE books_id_seq RESTART WITH 1;
+###
+### -- Truncate tables and reset sequences
+### TRUNCATE TABLE authors, books RESTART IDENTITY CASCADE;
+###
+### -- Check current sequence value
+### SELECT last_value FROM authors_id_seq;
+### SELECT last_value FROM books_id_seq;
+###
+### -- Reset to specific value
+### ALTER SEQUENCE authors_id_seq RESTART WITH 1000;
+### ============================================

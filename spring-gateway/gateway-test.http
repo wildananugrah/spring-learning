@@ -1,0 +1,271 @@
+### Spring Cloud Gateway Test Requests
+### Make sure the gateway is running on {{baseUrl}}
+
+###############################################################################
+### ACTUATOR ENDPOINTS
+###############################################################################
+
+@baseUrl=http://localhost:9090
+
+### Get all configured routes
+GET {{baseUrl}}/actuator/gateway/routes
+Accept: application/json
+
+### Get health status
+GET {{baseUrl}}/actuator/health
+Accept: application/json
+
+### Get specific route details
+GET {{baseUrl}}/actuator/gateway/routes/jsonplaceholder_route
+Accept: application/json
+
+### Get gateway info
+GET {{baseUrl}}/actuator/info
+Accept: application/json
+
+###############################################################################
+### YAML-CONFIGURED ROUTES
+###############################################################################
+
+### Test JSONPlaceholder route - Get all posts
+GET {{baseUrl}}/api/posts
+Accept: application/json
+
+### Test JSONPlaceholder route - Get specific post
+GET {{baseUrl}}/api/posts/1
+Accept: application/json
+
+### Test JSONPlaceholder route - Create a post
+POST {{baseUrl}}/api/posts
+Content-Type: application/json
+
+{
+  "title": "Test Post from Gateway",
+  "body": "This is a test post sent through Spring Cloud Gateway",
+  "userId": 1
+}
+
+### Test ReqRes route - Get all users
+GET {{baseUrl}}/api/users?page=2
+Accept: application/json
+
+### Test ReqRes route - Get specific user
+GET {{baseUrl}}/api/users/2
+Accept: application/json
+
+### Test ReqRes route - Create user
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "job": "Developer"
+}
+
+### Test HTTPBin route - Simple GET request
+GET {{baseUrl}}/httpbin/get
+Accept: application/json
+
+### Test HTTPBin route - GET with query parameters
+GET {{baseUrl}}/httpbin/get?param1=value1&param2=value2
+Accept: application/json
+
+### Test HTTPBin route - POST request
+POST {{baseUrl}}/httpbin/post
+Content-Type: application/json
+
+{
+  "message": "Hello from Gateway",
+  "timestamp": "2024-01-01T00:00:00Z"
+}
+
+### Test HTTPBin route - Check headers
+GET {{baseUrl}}/httpbin/headers
+Accept: application/json
+
+### Test HTTPBin route - Check response headers
+GET {{baseUrl}}/httpbin/response-headers?X-Custom-Header=CustomValue
+Accept: application/json
+
+### Test Redirect route (will redirect to Spring Cloud Gateway docs)
+GET {{baseUrl}}/spring
+
+### Test Rewrite route - Path rewriting example
+GET {{baseUrl}}/test/get
+Accept: application/json
+
+### Test Rewrite route - With query params
+GET {{baseUrl}}/test/anything?param=value
+Accept: application/json
+
+###############################################################################
+### JAVA-CONFIGURED ROUTES (GatewayConfig)
+###############################################################################
+
+### Test GitHub API route - Get user info
+GET {{baseUrl}}/github/users/octocat
+Accept: application/json
+
+### Test GitHub API route - Get user repos
+GET {{baseUrl}}/github/users/octocat/repos
+Accept: application/json
+
+### Test GitHub API route - Search repositories
+GET {{baseUrl}}/github/search/repositories?q=spring-boot
+Accept: application/json
+
+### Test GET-only route - Should work
+GET {{baseUrl}}/get-only/get
+Accept: application/json
+
+### Test GET-only route - POST should fail (only GET allowed)
+POST {{baseUrl}}/get-only/post
+Content-Type: application/json
+
+{
+  "test": "This should not work"
+}
+
+### Test Query route - With required query parameter
+GET {{baseUrl}}/search/get?q=test-query
+Accept: application/json
+
+### Test Query route - Without query parameter (should fail)
+GET {{baseUrl}}/search/get
+Accept: application/json
+
+### Test Custom Filter route - See custom headers in response
+GET {{baseUrl}}/custom/anything
+Accept: application/json
+
+### Test Custom Filter route - POST request
+POST {{baseUrl}}/custom/post
+Content-Type: application/json
+
+{
+  "data": "Testing custom filter",
+  "timestamp": "2024-01-01T00:00:00Z"
+}
+
+###############################################################################
+### TESTING CUSTOM HEADERS AND FILTERS
+###############################################################################
+
+### Test with custom request headers
+GET {{baseUrl}}/httpbin/headers
+Accept: application/json
+X-Test-Header: TestValue
+User-Agent: Spring-Cloud-Gateway-Test
+
+### Test response time header (added by CustomGlobalFilter)
+GET {{baseUrl}}/api/posts/1
+Accept: application/json
+
+### Check that X-Response-Time-Ms header is added
+### Look for X-Response-Timestamp and X-Response-Time-Ms in response headers
+
+###############################################################################
+### LOAD TESTING / RATE LIMITING
+###############################################################################
+
+### Test rate limiting - Send multiple requests quickly
+### (If rate limiter is configured, some requests might get rejected)
+GET {{baseUrl}}/httpbin/get
+Accept: application/json
+
+###
+
+GET {{baseUrl}}/httpbin/get
+Accept: application/json
+
+###
+
+GET {{baseUrl}}/httpbin/get
+Accept: application/json
+
+###
+
+GET {{baseUrl}}/httpbin/get
+Accept: application/json
+
+###
+
+GET {{baseUrl}}/httpbin/get
+Accept: application/json
+
+###############################################################################
+### ERROR TESTING
+###############################################################################
+
+### Test non-existent route (should return 404)
+GET {{baseUrl}}/non-existent-route
+Accept: application/json
+
+### Test HTTPBin status code responses
+GET {{baseUrl}}/httpbin/status/200
+Accept: application/json
+
+###
+
+GET {{baseUrl}}/httpbin/status/404
+Accept: application/json
+
+###
+
+GET {{baseUrl}}/httpbin/status/500
+Accept: application/json
+
+### Test HTTPBin delay (response after 2 seconds)
+GET {{baseUrl}}/httpbin/delay/2
+Accept: application/json
+
+###############################################################################
+### ADVANCED TESTING
+###############################################################################
+
+### Test JSON response
+GET {{baseUrl}}/httpbin/json
+Accept: application/json
+
+### Test XML response
+GET {{baseUrl}}/httpbin/xml
+Accept: application/xml
+
+### Test image response
+GET {{baseUrl}}/httpbin/image/png
+Accept: image/png
+
+### Test base64 encoding
+GET {{baseUrl}}/httpbin/base64/SFRUUEJJTiBpcyBhd2Vzb21l
+Accept: text/plain
+
+### Test cookies
+GET {{baseUrl}}/httpbin/cookies
+Accept: application/json
+
+### Test setting cookies
+GET {{baseUrl}}/httpbin/cookies/set?name=value
+Accept: application/json
+
+### Test UUID generation
+GET {{baseUrl}}/httpbin/uuid
+Accept: application/json
+
+###############################################################################
+### NOTES
+###############################################################################
+
+# Tips for using this file:
+# 1. In IntelliJ IDEA/VS Code, click the "Run" button next to each request
+# 2. Check the response headers to see custom headers added by filters
+# 3. Look at application logs to see filter logging in action
+# 4. Use the actuator endpoints to inspect route configurations
+# 5. The CustomGlobalFilter adds X-Response-Time-Ms to all responses
+
+# Expected custom headers in responses:
+# - X-Response-Timestamp (from CustomGlobalFilter)
+# - X-Response-Time-Ms (from CustomGlobalFilter)
+# - X-Response-Gateway (from some routes)
+# - X-Gateway (from some routes)
+
+###

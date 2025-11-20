@@ -1,0 +1,152 @@
+server:
+  port: 9090
+
+spring:
+  application:
+    name: spring-cloud-gateway
+
+  # Redis configuration for rate limiting
+  # For development: Use in-memory (no Redis needed)
+  # For production: Use actual Redis server
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      # Uncomment if Redis requires password
+      # password: ${REDIS_PASSWORD:}
+
+  cloud:
+    gateway:
+      # Global CORS configuration
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+            allowedHeaders: "*"
+
+      # Route definitions
+      routes:
+        # ==========================================
+        # USER ACCOUNT APP ROUTES (Backend Service)
+        # ==========================================
+
+        # Route 1: Authentication Endpoints
+        - id: auth_route
+          uri: http://localhost:8000
+          predicates:
+            - Path=/api/auth/**
+          filters:
+            - AddRequestHeader=X-Gateway, SpringCloudGateway
+            - AddResponseHeader=X-Routed-By, Gateway
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 10  # tokens added per second
+                redis-rate-limiter.burstCapacity: 20   # max tokens in bucket
+                redis-rate-limiter.requestedTokens: 1  # tokens per request
+                key-resolver: "#{@ipKeyResolver}"      # use IP-based limiting
+
+        # Route 2: Account Management Endpoints
+        - id: accounts_route
+          uri: http://localhost:8000
+          predicates:
+            - Path=/api/accounts/**
+          filters:
+            - AddRequestHeader=X-Gateway, SpringCloudGateway
+            - AddResponseHeader=X-Routed-By, Gateway
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 5    # 5 requests per second
+                redis-rate-limiter.burstCapacity: 10   # burst of 10 requests
+                redis-rate-limiter.requestedTokens: 1
+                key-resolver: "#{@userKeyResolver}"    # use user-based limiting
+
+        # Route 3: Transaction Endpoints
+        - id: transactions_route
+          uri: http://localhost:8000
+          predicates:
+            - Path=/api/transactions/**
+          filters:
+            - AddRequestHeader=X-Gateway, SpringCloudGateway
+            - AddResponseHeader=X-Routed-By, Gateway
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 3    # 3 requests per second (more restrictive)
+                redis-rate-limiter.burstCapacity: 5    # burst of 5 requests
+                redis-rate-limiter.requestedTokens: 1
+                key-resolver: "#{@userKeyResolver}"    # use user-based limiting
+
+        # Route 4: Actuator Endpoints (Backend Health Check)
+        - id: backend_actuator_route
+          uri: http://localhost:8000
+          predicates:
+            - Path=/actuator/**
+          filters:
+            - AddRequestHeader=X-Gateway, SpringCloudGateway
+
+        # ==========================================
+        # EXAMPLE/TEST ROUTES (Keep for learning)
+        # ==========================================
+
+        # Example 1: Route to JSONPlaceholder API
+        - id: jsonplaceholder_route
+          uri: https://jsonplaceholder.typicode.com
+          predicates:
+            - Path=/test/posts/**
+          filters:
+            - StripPrefix=1
+            - AddRequestHeader=X-Gateway, SpringCloudGateway
+
+        # Example 2: Route to ReqRes API
+        - id: reqres_route
+          uri: https://reqres.in
+          predicates:
+            - Path=/test/users/**
+          filters:
+            - StripPrefix=1
+            - AddResponseHeader=X-Response-Time, ${time}
+
+        # Example 3: Route to HTTPBin
+        - id: httpbin_route
+          uri: https://httpbin.org
+          predicates:
+            - Path=/httpbin/**
+          filters:
+            - StripPrefix=1
+            - AddRequestHeader=X-Gateway-Route, httpbin
+
+        # Example 4: Redirect route
+        - id: redirect_route
+          uri: https://spring.io
+          predicates:
+            - Path=/spring
+          filters:
+            - RedirectTo=302, https://spring.io/projects/spring-cloud-gateway
+
+        # Example 5: Rewrite path
+        - id: rewrite_route
+          uri: https://httpbin.org
+          predicates:
+            - Path=/test-rewrite/**
+          filters:
+            - RewritePath=/test-rewrite/(?<segment>.*), /$\{segment}
+
+# Actuator endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway
+  endpoint:
+    gateway:
+      enabled: true
+
+# Logging
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    reactor.netty.http.client: DEBUG

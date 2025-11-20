@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Import Spring Boot defaults -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <!-- Property for log pattern -->
+    <property name="CONSOLE_LOG_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) [%thread] %cyan(%logger{36}) - %msg%n"/>
+
+    <!-- Console Appender - Human Readable (default) -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- Console Appender - JSON Format -->
+    <appender name="CONSOLE_JSON" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <includeMdcKeyName>userId</includeMdcKeyName>
+            <includeMdcKeyName>httpMethod</includeMdcKeyName>
+            <includeMdcKeyName>httpUri</includeMdcKeyName>
+            <includeMdcKeyName>httpStatusCode</includeMdcKeyName>
+            <includeMdcKeyName>elapsedTime</includeMdcKeyName>
+            <includeMdcKeyName>requestBody</includeMdcKeyName>
+            <includeMdcKeyName>responseBody</includeMdcKeyName>
+            <includeMdcKeyName>exceptionType</includeMdcKeyName>
+
+            <fieldNames>
+                <timestamp>timestamp</timestamp>
+                <message>message</message>
+                <logger>logger</logger>
+                <thread>thread</thread>
+                <level>level</level>
+                <levelValue>[ignore]</levelValue>
+            </fieldNames>
+
+            <timestampPattern>yyyy-MM-dd'T'HH:mm:ss.SSSZ</timestampPattern>
+            <timeZone>UTC</timeZone>
+        </encoder>
+    </appender>
+
+    <!-- File Appender - JSON Format (optional) -->
+    <appender name="FILE_JSON" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/application.json</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/application-%d{yyyy-MM-dd}.%i.json.gz</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <includeMdcKeyName>userId</includeMdcKeyName>
+            <includeMdcKeyName>httpMethod</includeMdcKeyName>
+            <includeMdcKeyName>httpUri</includeMdcKeyName>
+            <includeMdcKeyName>httpStatusCode</includeMdcKeyName>
+            <includeMdcKeyName>elapsedTime</includeMdcKeyName>
+            <includeMdcKeyName>requestBody</includeMdcKeyName>
+            <includeMdcKeyName>responseBody</includeMdcKeyName>
+            <includeMdcKeyName>exceptionType</includeMdcKeyName>
+
+            <timestampPattern>yyyy-MM-dd'T'HH:mm:ss.SSSZ</timestampPattern>
+            <timeZone>UTC</timeZone>
+        </encoder>
+    </appender>
+
+    <!-- Profile: default (human-readable console output) -->
+    <springProfile name="default,dev,local">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+
+    <!-- Profile: json (JSON console output for production/containers) -->
+    <springProfile name="json,prod,production">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE_JSON"/>
+            <appender-ref ref="FILE_JSON"/>
+        </root>
+    </springProfile>
+
+    <!-- Application specific logging levels -->
+    <logger name="com.user.account.app" level="${LOGGING_LEVEL_APP:-INFO}"/>
+    <logger name="com.user.account.app.config.RequestResponseLoggingFilter" level="${LOGGING_LEVEL_REQUEST_FILTER:-INFO}"/>
+    <logger name="com.user.account.app.exceptions.GlobalExceptionHandler" level="${LOGGING_LEVEL_EXCEPTION_HANDLER:-ERROR}"/>
+    <logger name="org.springframework.security" level="${LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY:-INFO}"/>
+
+    <!-- Reduce noise from common libraries -->
+    <logger name="org.hibernate" level="WARN"/>
+    <logger name="org.springframework.web" level="WARN"/>
+    <logger name="org.apache.tomcat" level="WARN"/>
+</configuration>

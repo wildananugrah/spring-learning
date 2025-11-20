@@ -1,0 +1,147 @@
+### ==========================================
+### SPRING GATEWAY -> USER ACCOUNT APP TESTS
+### ==========================================
+### Gateway: http://localhost:9090
+### Backend: http://localhost:8000
+### ==========================================
+
+### 1. Register a new user (via Gateway)
+POST http://localhost:9090/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "john_gateway",
+  "email": "john.gateway@example.com",
+  "password": "password123",
+  "fullName": "John Gateway User"
+}
+
+### 2. Login (via Gateway)
+POST http://localhost:9090/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "test1",
+  "password": "password123"
+}
+
+### IMPORTANT: Copy the token from the login response above
+### Replace YOUR_JWT_TOKEN_HERE with the actual token
+
+@token = YOUR_JWT_TOKEN_HERE
+
+### ==========================================
+### ACCOUNT MANAGEMENT (Protected Routes)
+### ==========================================
+
+### 3. Create Account (via Gateway)
+POST http://localhost:9090/api/accounts
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "accountName": "Gateway Savings Account",
+  "initialBalance": 5000.00
+}
+
+### 4. Get All Accounts (via Gateway)
+GET http://localhost:9090/api/accounts
+Authorization: Bearer {{token}}
+
+### 5. Get Specific Account (via Gateway)
+### Replace ACCOUNT_NUMBER with actual account number from response above
+GET http://localhost:9090/api/accounts/ACCOUNT_NUMBER
+Authorization: Bearer {{token}}
+
+### ==========================================
+### TRANSACTION OPERATIONS
+### ==========================================
+
+### 6. Deposit Money (via Gateway)
+POST http://localhost:9090/api/transactions/deposit
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "accountNumber": "ACCOUNT_NUMBER",
+  "amount": 1000.00,
+  "description": "Deposit via Gateway"
+}
+
+### 7. Withdraw Money (via Gateway)
+POST http://localhost:9090/api/transactions/withdrawal
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "accountNumber": "ACCOUNT_NUMBER",
+  "amount": 500.00,
+  "description": "Withdrawal via Gateway"
+}
+
+### 8. Transfer Money (via Gateway)
+### You need two accounts for this - create another account first
+POST http://localhost:9090/api/transactions/transfer
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "fromAccountNumber": "ACCOUNT_NUMBER_1",
+  "toAccountNumber": "ACCOUNT_NUMBER_2",
+  "amount": 200.00,
+  "description": "Transfer via Gateway"
+}
+
+### 9. Get Transaction History (via Gateway)
+GET http://localhost:9090/api/transactions?accountNumber=ACCOUNT_NUMBER&page=0&size=10&sortBy=createdAt&sortDirection=desc
+Authorization: Bearer {{token}}
+
+### ==========================================
+### HEALTH CHECKS
+### ==========================================
+
+### 10. Gateway Health Check
+GET http://localhost:9090/actuator/health
+
+### 11. Backend Health Check (via Gateway)
+GET http://localhost:9090/actuator/health
+
+### 12. Gateway Routes Info
+GET http://localhost:9090/actuator/gateway/routes
+
+### ==========================================
+### DIRECT BACKEND ACCESS (For Comparison)
+### ==========================================
+
+### 13. Direct Backend - Register (Bypass Gateway)
+POST http://localhost:8000/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "direct_user",
+  "email": "direct@example.com",
+  "password": "password123",
+  "fullName": "Direct Backend User"
+}
+
+### 14. Direct Backend - Login (Bypass Gateway)
+POST http://localhost:8000/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "direct_user",
+  "password": "password123"
+}
+
+### ==========================================
+### TEST ROUTES (External APIs)
+### ==========================================
+
+### 15. Test JSONPlaceholder (via Gateway)
+GET http://localhost:9090/test/posts/1
+
+### 16. Test ReqRes (via Gateway)
+GET http://localhost:9090/test/users/2
+
+### 17. Test HTTPBin (via Gateway)
+GET http://localhost:9090/httpbin/get

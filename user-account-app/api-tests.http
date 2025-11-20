@@ -1,0 +1,190 @@
+### Bank Application API Tests
+
+@baseUrl = http://localhost:8000
+# @token = eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOjQsInN1YiI6InRlc3QxIiwiaWF0IjoxNzYzNDcyMTU4LCJleHAiOjE3NjM1NTg1NTh9.U6xR5_HmMxxxwM2bd3KtuLDhpEmAZwmacRuvSXQ1frmWjGRY5CeIH_MdBDvT8fFZPPz-G1kG_eoVz-JWaqulng
+
+### 1. Register a new user
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "test5",
+  "email": "test5@mail.com",
+  "password": "password123",
+  "fullName": "Test 5"
+}
+
+### 2. Login
+# @name Login
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "test1",
+  "password": "password123"
+}
+
+###
+@token={{Login.response.body.data.token}}
+
+### 3. Create an account (requires authentication)
+POST {{baseUrl}}/api/accounts
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "accountName": "Savings Account",
+  "initialBalance": 1000.00
+}
+
+### 4. Create another account
+POST {{baseUrl}}/api/accounts
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "accountName": "Checking Account",
+  "initialBalance": 500.00
+}
+
+### 5. Get all accounts
+GET {{baseUrl}}/api/accounts
+Authorization: Bearer {{token}}
+
+### 6. Get account detail by account number
+GET {{baseUrl}}/api/accounts/0978710798
+Authorization: Bearer {{token}}
+
+### 7. Deposit money
+POST {{baseUrl}}/api/transactions/deposit
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "accountNumber": "0978710798",
+  "amount": 500.00,
+  "description": "Monthly salary deposit"
+}
+
+### 8. Withdraw money
+POST {{baseUrl}}/api/transactions/withdrawal
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "accountNumber": "0893346453",
+  "amount": 200.00,
+  "description": "ATM withdrawal"
+}
+
+### 9. Transfer money
+POST {{baseUrl}}/api/transactions/transfer
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "accountNumber": "0893346453",
+  "toAccountNumber": "0281990477",
+  "amount": 100.00,
+  "description": "Transfer to savings"
+}
+
+### 10. Get transaction history (basic)
+GET {{baseUrl}}/api/transactions?accountNumber=0978710798
+Authorization: Bearer {{token}}
+
+### 11. Get transaction history with pagination
+GET {{baseUrl}}/api/transactions?accountNumber=0978710798&page=0&size=5
+Authorization: Bearer {{token}}
+
+### 12. Get transaction history with sorting (ascending by amount)
+GET {{baseUrl}}/api/transactions?accountNumber=0978710798&sortBy=amount&sortDirection=asc
+Authorization: Bearer {{token}}
+
+### 13. Get transaction history with date range
+GET {{baseUrl}}/api/transactions?accountNumber=0978710798&startDate=2025-11-12T00:00:00&endDate=2025-12-31T23:59:59
+Authorization: Bearer {{token}}
+
+### 14. Get transaction history with all filters
+GET {{baseUrl}}/api/transactions?accountNumber=0978710798&startDate=2025-01-01T00:00:00&endDate=2025-12-31T23:59:59&page=0&size=10&sortBy=createdAt&sortDirection=desc
+Authorization: Bearer {{token}}
+
+### 15. Delete account
+DELETE {{baseUrl}}/api/accounts/0893346453
+Authorization: Bearer {{token}}
+
+### ============================================
+### Error Handling Tests
+### ============================================
+
+### Register with existing username
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "john_doe",
+  "email": "another@example.com",
+  "password": "password123",
+  "fullName": "Another User"
+}
+
+### Login with wrong password
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "john_doe",
+  "password": "wrongpassword"
+}
+
+### Withdraw more than balance
+POST {{baseUrl}}/api/transactions/withdrawal
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "accountNumber": "0123456789",
+  "amount": 999999.00,
+  "description": "Over withdrawal attempt"
+}
+
+### Transfer to same account (should fail)
+POST {{baseUrl}}/api/transactions/transfer
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "accountNumber": "0123456789",
+  "toAccountNumber": "0123456789",
+  "amount": 100.00,
+  "description": "Invalid transfer"
+}
+
+### Access without authentication
+GET {{baseUrl}}/api/accounts
+
+### actuator
+
+GET http://localhost:8000/actuator/health
+
+###
+GET http://localhost:8000/actuator/info
+
+
+###
+GET http://localhost:8000/actuator/metrics
+
+###
+GET http://localhost:8000/actuator/metrics/disk.free
+
+
+###
+GET http://localhost:8000/actuator/env
+
+### 
+GET http://localhost:8000/actuator/beans
+
+
+### 
+GET http://localhost:8000/actuator/mappings
+
