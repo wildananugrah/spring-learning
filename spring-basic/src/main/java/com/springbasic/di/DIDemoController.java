@@ -1,6 +1,5 @@
 package com.springbasic.di;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,19 +27,34 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/di")
-@RequiredArgsConstructor  // Constructor injection for this controller
 public class DIDemoController {
 
     // Constructor injection - RECOMMENDED
     private final NotificationService notificationService;
     private final OrderService orderService;
     private final DIConfig.ReportService reportService;
-
-    @Qualifier("emailMessageService")
     private final MessageService emailService;
-
-    @Qualifier("smsMessageService")
     private final MessageService smsService;
+
+    /**
+     * Constructor with @Qualifier annotations
+     *
+     * IMPORTANT: When using @Qualifier with constructor injection, you CANNOT use
+     * @RequiredArgsConstructor from Lombok. You must write the constructor manually
+     * to apply @Qualifier to the constructor parameters.
+     */
+    public DIDemoController(
+            NotificationService notificationService,
+            OrderService orderService,
+            DIConfig.ReportService reportService,
+            @Qualifier("emailMessageService") MessageService emailService,
+            @Qualifier("smsMessageService") MessageService smsService) {
+        this.notificationService = notificationService;
+        this.orderService = orderService;
+        this.reportService = reportService;
+        this.emailService = emailService;
+        this.smsService = smsService;
+    }
 
     /**
      * Demonstrates constructor injection with NotificationService
