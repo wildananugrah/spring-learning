@@ -1,17 +1,17 @@
 ### Bank Application API Tests
 
 @baseUrl = http://localhost:8000
-# @token = eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOjQsInN1YiI6InRlc3QxIiwiaWF0IjoxNzYzNDcyMTU4LCJleHAiOjE3NjM1NTg1NTh9.U6xR5_HmMxxxwM2bd3KtuLDhpEmAZwmacRuvSXQ1frmWjGRY5CeIH_MdBDvT8fFZPPz-G1kG_eoVz-JWaqulng
+@token = eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOjIsInN1YiI6InRlc3QxIiwiaWF0IjoxNzYzNjg4OTI2LCJleHAiOjE3NjM3NzUzMjZ9.nMH4NPo2zC09lYfp09X0oGI3ZDaYwvCugkk7DAh_oH6AW_o7QnQ7kLJ3IDvcteWjrgtWxMuTx8gSXAGo2Olq5A
 
 ### 1. Register a new user
 POST {{baseUrl}}/api/auth/register
 Content-Type: application/json
 
 {
-  "username": "test5",
-  "email": "test5@mail.com",
+  "username": "test1",
+  "email": "test1@mail.com",
   "password": "password123",
-  "fullName": "Test 5"
+  "fullName": "Test 1"
 }
 
 ### 2. Login
@@ -52,7 +52,7 @@ GET {{baseUrl}}/api/accounts
 Authorization: Bearer {{token}}
 
 ### 6. Get account detail by account number
-GET {{baseUrl}}/api/accounts/0978710798
+GET {{baseUrl}}/api/accounts/0613805398
 Authorization: Bearer {{token}}
 
 ### 7. Deposit money
@@ -175,7 +175,7 @@ GET http://localhost:8000/actuator/info
 GET http://localhost:8000/actuator/metrics
 
 ###
-GET http://localhost:8000/actuator/metrics/disk.free
+GET http://localhost:8000/actuator/metrics/jdbc.connections.active
 
 
 ###

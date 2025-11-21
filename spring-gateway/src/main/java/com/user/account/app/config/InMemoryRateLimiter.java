@@ -33,21 +33,25 @@ public class InMemoryRateLimiter extends AbstractRateLimiter<InMemoryRateLimiter
     public Mono<Response> isAllowed(String routeId, String key) {
         Config config = getConfig().get(routeId);
 
+        // Use final variable for lambda
+        final Config finalConfig;
         if (config == null) {
             // Default config if not specified
-            config = new Config()
+            finalConfig = new Config()
                     .setReplenishRate(10)
                     .setBurstCapacity(20);
+        } else {
+            finalConfig = config;
         }
 
         TokenBucket bucket = buckets.computeIfAbsent(key, k -> new TokenBucket(
-                config.getBurstCapacity(),
-                config.getReplenishRate()
+                finalConfig.getBurstCapacity(),
+                finalConfig.getReplenishRate()
         ));
 
-        boolean allowed = bucket.tryConsume(config.getRequestedTokens());
+        boolean allowed = bucket.tryConsume(finalConfig.getRequestedTokens());
 
-        Response response = new Response(allowed, getHeaders(config, bucket));
+        Response response = new Response(allowed, getHeaders(finalConfig, bucket));
 
         return Mono.just(response);
     }
