@@ -28,7 +28,7 @@ Content-Type: application/json
 ### IMPORTANT: Copy the token from the login response above
 ### Replace YOUR_JWT_TOKEN_HERE with the actual token
 
-@token = eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOjIsInN1YiI6InRlc3QxIiwiaWF0IjoxNzYzNjg5Mjk2LCJleHAiOjE3NjM3NzU2OTZ9.1YBYZKOGPxIniTYhTlxIwbIyJ1u65YkcwL9KrtT9p2WYugCHuAuOk8HO4kl5ilRXeRUw-ACp5bxByhMtD8ZKsQ
+@token = eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOjIsInN1YiI6InRlc3QxIiwiaWF0IjoxNzYzODkxNzI3LCJleHAiOjE3NjM5NzgxMjd9.1iGK7_r2LkAMJpBdm5hfkrzVMuavjEUT_1O0LKxBe05F_KlZs7NYiADO32CWb_NfAbyONMekja4NoPP7l5nSUg
 
 ### ==========================================
 ### ACCOUNT MANAGEMENT (Protected Routes)

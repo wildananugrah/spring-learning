@@ -20,15 +20,6 @@ public class UserAccountApplication {
 	public void onApplicationReady() {
 		logger.info("=".repeat(80));
 		logger.info("Spring Cloud Gateway is up and running!");
-		logger.info("Available routes:");
-		logger.info("  - http://localhost:9090/api/posts/** -> JSONPlaceholder API");
-		logger.info("  - http://localhost:9090/api/users/** -> ReqRes API");
-		logger.info("  - http://localhost:9090/httpbin/** -> HTTPBin");
-		logger.info("  - http://localhost:9090/github/** -> GitHub API");
-		logger.info("  - http://localhost:9090/custom/** -> Custom Filter Example");
-		logger.info("Gateway endpoints:");
-		logger.info("  - http://localhost:9090/actuator/gateway/routes");
-		logger.info("  - http://localhost:9090/actuator/health");
 		logger.info("=".repeat(80));
 	}
 
