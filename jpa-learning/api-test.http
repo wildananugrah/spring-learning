@@ -1,0 +1,391 @@
+### JPA Learning API Tests
+### Base URL
+@baseUrl = http://localhost:8001
+@contentType = application/json
+
+################################################################################
+### CRUD OPERATIONS
+################################################################################
+
+### Create Student 1
+POST {{baseUrl}}/api/students
+Content-Type: {{contentType}}
+
+{
+  "studentId": "STU001",
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "john.doe@example.com",
+  "dateOfBirth": "2000-01-15",
+  "gender": "MALE",
+  "address": "123 Main St, New York, NY",
+  "phoneNumber": "555-0101",
+  "status": "ACTIVE"
+}
+
+### Create Student 2
+POST {{baseUrl}}/api/students
+Content-Type: {{contentType}}
+
+{
+  "studentId": "STU002",
+  "firstName": "Jane",
+  "lastName": "Smith",
+  "email": "jane.smith@gmail.com",
+  "dateOfBirth": "1999-05-20",
+  "gender": "FEMALE",
+  "address": "456 Oak Ave, Los Angeles, CA",
+  "phoneNumber": "555-0102",
+  "status": "ACTIVE"
+}
+
+### Create Student 3
+POST {{baseUrl}}/api/students
+Content-Type: {{contentType}}
+
+{
+  "studentId": "STU003",
+  "firstName": "Michael",
+  "lastName": "Johnson",
+  "email": "michael.j@example.com",
+  "dateOfBirth": "2001-03-10",
+  "gender": "MALE",
+  "address": "789 Pine Rd, Chicago, IL",
+  "phoneNumber": "555-0103",
+  "status": "ACTIVE"
+}
+
+### Create Student 4
+POST {{baseUrl}}/api/students
+Content-Type: {{contentType}}
+
+{
+  "studentId": "STU004",
+  "firstName": "Emily",
+  "lastName": "Davis",
+  "email": "emily.davis@gmail.com",
+  "dateOfBirth": "2000-08-25",
+  "gender": "FEMALE",
+  "address": "321 Elm St, Houston, TX",
+  "phoneNumber": "555-0104",
+  "status": "INACTIVE"
+}
+
+### Create Student 5
+POST {{baseUrl}}/api/students
+Content-Type: {{contentType}}
+
+{
+  "studentId": "STU005",
+  "firstName": "David",
+  "lastName": "Wilson",
+  "email": "david.w@example.com",
+  "dateOfBirth": "1998-12-05",
+  "gender": "MALE",
+  "address": "654 Maple Dr, Phoenix, AZ",
+  "phoneNumber": "555-0105",
+  "status": "GRADUATED"
+}
+
+### Get Student by ID (replace {id} with actual ID)
+GET {{baseUrl}}/api/students/1
+
+### Get All Students
+GET {{baseUrl}}/api/students
+
+### Update Student (replace {id} with actual ID)
+PUT {{baseUrl}}/api/students/1
+Content-Type: {{contentType}}
+
+{
+  "studentId": "STU001",
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "john.doe.updated@example.com",
+  "dateOfBirth": "2000-01-15",
+  "gender": "MALE",
+  "address": "123 Main St, New York, NY (Updated)",
+  "phoneNumber": "555-9999",
+  "status": "ACTIVE"
+}
+
+### Delete Student (replace {id} with actual ID)
+DELETE {{baseUrl}}/api/students/10
+
+################################################################################
+### DERIVED QUERY METHODS
+################################################################################
+
+### Get Student by Student ID
+GET {{baseUrl}}/api/students/by-student-id/STU001
+
+### Get Student by Email
+GET {{baseUrl}}/api/students/by-email?email=john.doe@example.com
+
+### Get Students by Status
+GET {{baseUrl}}/api/students/by-status/ACTIVE
+
+### Get Students by Gender
+GET {{baseUrl}}/api/students/by-gender/MALE
+
+### Search Students by Name (contains)
+GET {{baseUrl}}/api/students/search-by-name?firstName=John
+
+################################################################################
+### JPQL QUERIES
+################################################################################
+
+### Get Students by Full Name
+GET {{baseUrl}}/api/students/by-full-name?firstName=John&lastName=Doe
+
+### Get Students by Email Domain
+GET {{baseUrl}}/api/students/by-email-domain?domain=example.com
+
+### Get Student with Enrollments (JOIN FETCH) - replace {id}
+GET {{baseUrl}}/api/students/1/with-enrollments
+
+### Count Students by Gender and Status
+GET {{baseUrl}}/api/students/count-by-gender-status?gender=MALE&status=ACTIVE
+
+################################################################################
+### NATIVE SQL QUERIES
+################################################################################
+
+### Get Students Younger Than Date
+GET {{baseUrl}}/api/students/younger-than?date=2000-01-01
+
+### Get Students by Course (replace {courseId} with actual ID)
+GET {{baseUrl}}/api/students/by-course/1
+
+### Get Students with Minimum Grade
+GET {{baseUrl}}/api/students/with-min-grade?minGrade=3.5
+
+################################################################################
+### CRITERIA API QUERIES
+################################################################################
+
+### Get Students by Status (Criteria API)
+GET {{baseUrl}}/api/students/criteria/by-status/ACTIVE
+
+### Get Students by Gender and Status (Criteria API)
+GET {{baseUrl}}/api/students/criteria/by-gender-status?gender=FEMALE&status=ACTIVE
+
+### Search Students by Name Pattern (Criteria API)
+GET {{baseUrl}}/api/students/criteria/search-by-name?pattern=john
+
+### Get Students by Date Range (Criteria API)
+GET {{baseUrl}}/api/students/criteria/date-range?startDate=1999-01-01&endDate=2001-12-31
+
+### Dynamic Search with Optional Filters (Criteria API)
+GET {{baseUrl}}/api/students/criteria/search?firstName=John&status=ACTIVE
+
+### Dynamic Search - Only Status
+GET {{baseUrl}}/api/students/criteria/search?status=ACTIVE
+
+### Dynamic Search - Only Gender
+GET {{baseUrl}}/api/students/criteria/search?gender=MALE
+
+### Dynamic Search - Multiple Filters
+GET {{baseUrl}}/api/students/criteria/search?firstName=J&lastName=D&gender=MALE&status=ACTIVE
+
+### Get Students Enrolled in Course (Criteria API with JOIN)
+GET {{baseUrl}}/api/students/criteria/enrolled-in-course/1
+
+################################################################################
+### UPDATE OPERATIONS
+################################################################################
+
+### Update Phone Number (replace {id})
+PATCH {{baseUrl}}/api/students/1/phone?phoneNumber=555-7777
+
+### Bulk Update Status
+PATCH {{baseUrl}}/api/students/bulk-update-status?oldStatus=ACTIVE&newStatus=INACTIVE
+
+################################################################################
+### STATISTICS
+################################################################################
+
+### Get Enrollment Statistics
+GET {{baseUrl}}/api/students/statistics/enrollment-count
+
+### Get Students by Age Range
+GET {{baseUrl}}/api/students/statistics/by-age?minAge=23&maxAge=26
+
+################################################################################
+### COURSE ENDPOINTS (if you want to create courses)
+################################################################################
+
+### Create Course 1
+POST {{baseUrl}}/api/courses
+Content-Type: {{contentType}}
+
+{
+  "courseCode": "CS101",
+  "courseName": "Introduction to Computer Science",
+  "description": "Fundamentals of programming and computer science",
+  "credits": 3,
+  "instructor": "Dr. Smith",
+  "department": "Computer Science",
+  "level": "BEGINNER",
+  "maxEnrollment": 30,
+  "currentEnrollment": 0
+}
+
+### Create Course 2
+POST {{baseUrl}}/api/courses
+Content-Type: {{contentType}}
+
+{
+  "courseCode": "CS201",
+  "courseName": "Data Structures and Algorithms",
+  "description": "Advanced data structures and algorithm design",
+  "credits": 4,
+  "instructor": "Dr. Johnson",
+  "department": "Computer Science",
+  "level": "INTERMEDIATE",
+  "maxEnrollment": 25,
+  "currentEnrollment": 0
+}
+
+### Create Course 3
+POST {{baseUrl}}/api/courses
+Content-Type: {{contentType}}
+
+{
+  "courseCode": "MATH201",
+  "courseName": "Calculus II",
+  "description": "Integral calculus and series",
+  "credits": 4,
+  "instructor": "Dr. Williams",
+  "department": "Mathematics",
+  "level": "INTERMEDIATE",
+  "maxEnrollment": 35,
+  "currentEnrollment": 0
+}
+
+### Get All Courses
+GET {{baseUrl}}/api/courses
+
+### Get Course by ID
+GET {{baseUrl}}/api/courses/1
+
+################################################################################
+### ENROLLMENT ENDPOINTS (if you want to create enrollments)
+################################################################################
+
+### Create Enrollment 1
+POST {{baseUrl}}/api/enrollments
+Content-Type: {{contentType}}
+
+{
+  "studentId": 1,
+  "courseId": 1,
+  "enrollmentDate": "2024-01-15",
+  "status": "ENROLLED",
+  "grade": 3.8,
+  "letterGrade": "A-"
+}
+
+### Create Enrollment 2
+POST {{baseUrl}}/api/enrollments
+Content-Type: {{contentType}}
+
+{
+  "studentId": 1,
+  "courseId": 2,
+  "enrollmentDate": "2024-01-15",
+  "status": "COMPLETED",
+  "grade": 4.0,
+  "letterGrade": "A"
+}
+
+### Create Enrollment 3
+POST {{baseUrl}}/api/enrollments
+Content-Type: {{contentType}}
+
+{
+  "studentId": 2,
+  "courseId": 1,
+  "enrollmentDate": "2024-01-16",
+  "status": "ENROLLED",
+  "grade": 3.5,
+  "letterGrade": "B+"
+}
+
+### Get All Enrollments
+GET {{baseUrl}}/api/enrollments
+
+### Get Enrollment by ID
+GET {{baseUrl}}/api/enrollments/1
+
+################################################################################
+### ERROR TESTING
+################################################################################
+
+### Test - Invalid Email Format
+POST {{baseUrl}}/api/students
+Content-Type: {{contentType}}
+
+{
+  "studentId": "STU999",
+  "firstName": "Test",
+  "lastName": "User",
+  "email": "invalid-email",
+  "dateOfBirth": "2000-01-01",
+  "gender": "MALE",
+  "address": "Test Address",
+  "phoneNumber": "555-0000",
+  "status": "ACTIVE"
+}
+
+### Test - Missing Required Fields
+POST {{baseUrl}}/api/students
+Content-Type: {{contentType}}
+
+{
+  "studentId": "STU999",
+  "email": "test@example.com"
+}
+
+### Test - Future Date of Birth (should fail validation)
+POST {{baseUrl}}/api/students
+Content-Type: {{contentType}}
+
+{
+  "studentId": "STU999",
+  "firstName": "Future",
+  "lastName": "Baby",
+  "email": "future@example.com",
+  "dateOfBirth": "2030-01-01",
+  "gender": "MALE",
+  "address": "Test",
+  "phoneNumber": "555-0000",
+  "status": "ACTIVE"
+}
+
+### Test - Non-existent Student ID
+GET {{baseUrl}}/api/students/99999
+
+################################################################################
+### NOTES
+################################################################################
+
+# How to use this file:
+# 1. Make sure the application is running on http://localhost:8001
+# 2. Use VS Code with REST Client extension or IntelliJ IDEA HTTP Client
+# 3. Click "Send Request" above each request
+# 4. Create students first, then courses, then enrollments
+# 5. Note the IDs returned from POST requests to use in subsequent requests
+# 6. Replace {id}, {courseId}, etc. with actual IDs from your database
+
+# Query Types Demonstrated:
+# - Derived Query Methods: Method name-based queries
+# - JPQL: Entity-based queries with @Query
+# - Native SQL: Database-specific queries
+# - Criteria API: Programmatic, type-safe queries
+
+# Available Enums:
+# Gender: MALE, FEMALE, OTHER
+# StudentStatus: ACTIVE, INACTIVE, GRADUATED, SUSPENDED
+# CourseLevel: BEGINNER, INTERMEDIATE, ADVANCED, EXPERT
+# EnrollmentStatus: ENROLLED, COMPLETED, DROPPED, FAILED

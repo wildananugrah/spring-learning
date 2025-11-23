@@ -39,7 +39,7 @@ public class Enrollment {
     @Column(nullable = false, length = 20)
     private EnrollmentStatus status;
 
-    @Column(precision = 5, scale = 2)
+    @Column
     private Double grade;
 
     @Column(length = 2)
