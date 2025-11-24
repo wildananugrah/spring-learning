@@ -1,7 +1,7 @@
 ### Bank Application API Tests
 
 @baseUrl = http://localhost:8000
-@token = eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOjIsInN1YiI6InRlc3QxIiwiaWF0IjoxNzYzNjg4OTI2LCJleHAiOjE3NjM3NzUzMjZ9.nMH4NPo2zC09lYfp09X0oGI3ZDaYwvCugkk7DAh_oH6AW_o7QnQ7kLJ3IDvcteWjrgtWxMuTx8gSXAGo2Olq5A
+@token = eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOjM1LCJzdWIiOiJ0ZXN0MiIsImlhdCI6MTc2Mzk5NjQ3NiwiZXhwIjoxNzY0MDgyODc2fQ.LZHdjvG5yqH1M378pGi-svzPqKsV-GXg9oZyanb2KuFF4AzP8vvd0JSwRtj2FcJO2fS1fuvVbAewGm63XDYyRg
 
 ### 1. Register a new user
 POST {{baseUrl}}/api/auth/register
@@ -20,7 +20,7 @@ POST {{baseUrl}}/api/auth/login
 Content-Type: application/json
 
 {
-  "username": "test1",
+  "username": "test2",
   "password": "password123"
 }
 
@@ -83,14 +83,14 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "accountNumber": "0893346453",
-  "toAccountNumber": "0281990477",
+  "fromAccountNumber": "0510231925",
+  "toAccountNumber": "0613805398",
   "amount": 100.00,
   "description": "Transfer to savings"
 }
 
 ### 10. Get transaction history (basic)
-GET {{baseUrl}}/api/transactions?accountNumber=0978710798
+GET {{baseUrl}}/api/transactions?accountNumber=0510231925
 Authorization: Bearer {{token}}
 
 ### 11. Get transaction history with pagination

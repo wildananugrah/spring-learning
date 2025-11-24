@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 public class TransactionRequest {
 
     @NotBlank(message = "Account number is required")
-    private String accountNumber;
+    private String fromAccountNumber;
 
     @NotNull(message = "Amount is required")
     @Positive(message = "Amount must be positive")

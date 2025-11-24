@@ -34,9 +34,9 @@ public class TransactionLogic {
     @Transactional
     @SneakyThrows
     public TransactionResponse deposit(String username, TransactionRequest request) {
-        validateAccountOwnership(username, request.getAccountNumber());
+        validateAccountOwnership(username, request.getFromAccountNumber());
 
-        Account account = accountRepository.findByAccountNumber(request.getAccountNumber())
+        Account account = accountRepository.findByAccountNumber(request.getFromAccountNumber())
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
 
         BigDecimal balanceBefore = account.getBalance();
@@ -63,9 +63,9 @@ public class TransactionLogic {
     @Transactional
     @SneakyThrows
     public TransactionResponse withdrawal(String username, TransactionRequest request) {
-        validateAccountOwnership(username, request.getAccountNumber());
+        validateAccountOwnership(username, request.getFromAccountNumber());
 
-        Account account = accountRepository.findByAccountNumber(request.getAccountNumber())
+        Account account = accountRepository.findByAccountNumber(request.getFromAccountNumber())
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
 
         if (account.getBalance().compareTo(request.getAmount()) < 0) {
@@ -96,17 +96,17 @@ public class TransactionLogic {
     @Transactional
     @SneakyThrows
     public TransactionResponse transfer(String username, TransactionRequest request) {
-        validateAccountOwnership(username, request.getAccountNumber());
+        validateAccountOwnership(username, request.getFromAccountNumber());
 
         if (request.getToAccountNumber() == null || request.getToAccountNumber().isEmpty()) {
             throw new IllegalArgumentException("Destination account number is required");
         }
 
-        if (request.getAccountNumber().equals(request.getToAccountNumber())) {
+        if (request.getFromAccountNumber().equals(request.getToAccountNumber())) {
             throw new IllegalArgumentException("Cannot transfer to the same account");
         }
 
-        Account fromAccount = accountRepository.findByAccountNumber(request.getAccountNumber())
+        Account fromAccount = accountRepository.findByAccountNumber(request.getFromAccountNumber())
                 .orElseThrow(() -> new ResourceNotFoundException("Source account not found"));
 
         Account toAccount = accountRepository.findByAccountNumber(request.getToAccountNumber())
